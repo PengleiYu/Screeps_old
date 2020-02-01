@@ -7,7 +7,7 @@ const roleSoldier = {
             }
         } else {
             // 停靠在空地
-            creep.moveTo(18, 25, { visualizePathStyle: { stroke: '#fff' } })
+            creep.moveTo(Game.spawns['Spawn1'], { visualizePathStyle: { stroke: '#fff' } })
         }
     }
 }

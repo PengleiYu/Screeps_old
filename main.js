@@ -21,7 +21,10 @@ class Role {
 		if (list.length < this.max) {
 			let name = '' + this.role + Game.time
 			let code = this.spawn.spawnCreep(this.body, name, {
-				memory: { role: this.role }
+				memory: {
+					role: this.role,
+					directions: [BOTTOM]
+				}
 			})
 			if (code == OK)
 				console.log('spawn a new creep: ' + name + ' ' +
@@ -32,23 +35,24 @@ class Role {
 	play() {
 		let creepList = _.filter(Game.creeps, (creep) => !creep.spawning && creep.memory.role == this.role)
 		this.createIfNeed(creepList)
-		if (this.waitMax && creepList.length < this.max) {
-			return
-		}
+		// if (this.waitMax && creepList.length < this.max) {
+		// 	return
+		// }
 		for (let creep of creepList) {
 			this.script.run(creep)
 		}
 	}
 }
 
+const LITTLE_BODY = [WORK, CARRY, MOVE]
 const DEFAULT_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
-const HARVESTER_BODY = [WORK, CARRY, CARRY, CARRY, MOVE]
+const HARVESTER_BODY = LITTLE_BODY
 const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
 // const DEFAULT_BODY = [WORK, CARRY, MOVE] 
 const roleList = [
-	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 2),
-	new Role(ROLE_UPGRADER, DEFAULT_BODY, roleUpgrader, 1),
-	new Role(ROLE_BUILDER, DEFAULT_BODY, roleBuilder, 1),
+	new Role(ROLE_HARVESTER, LITTLE_BODY, roleHarvester, 1),
+	new Role(ROLE_UPGRADER, LITTLE_BODY, roleUpgrader, 1),
+	new Role(ROLE_BUILDER, LITTLE_BODY, roleBuilder, 1),
 	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
 ]
 

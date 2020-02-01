@@ -17,7 +17,7 @@ const roleBuilder = {
                 }
             } else {
                 // 停靠在空地
-                creep.moveTo(18, 25, { visualizePathStyle: { stroke: '#fff' } })
+                creep.moveTo(Game.spawns['Spawn1'], { visualizePathStyle: { stroke: '#fff' } })
             }
         } else {
             let resource = creep.room.find(FIND_SOURCES)[0]
