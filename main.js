@@ -1,18 +1,21 @@
 const roleUpgrader = require('role.upgrader')
 const roleHarvester = require('role.harvester')
 const roleBuilder = require('role.builder')
+const roleSoldier = require('role.soldier')
 
 const ROLE_UPGRADER = 'upgrader'
 const ROLE_HARVESTER = 'harvester'
 const ROLE_BUILDER = 'builder'
+const ROLE_SOLDIER = 'soldier'
 
 class Role {
-	constructor(role, body, script, max) {
+	constructor(role, body, script, max, waitMax = false) {
 		this.role = role
 		this.body = body
 		this.script = script
 		this.max = max
 		this.spawn = Game.spawns['Spawn1']
+		this.waitMax = waitMax
 	}
 	createIfNeed(list) {
 		if (list.length < this.max) {
@@ -27,8 +30,11 @@ class Role {
 	}
 
 	play() {
-		let creepList = _.filter(Game.creeps, (creep) => creep.memory.role == this.role)
+		let creepList = _.filter(Game.creeps, (creep) => !creep.spawning && creep.memory.role == this.role)
 		this.createIfNeed(creepList)
+		if (this.waitMax && creepList.length < this.max) {
+			return
+		}
 		for (let creep of creepList) {
 			this.script.run(creep)
 		}
@@ -36,11 +42,14 @@ class Role {
 }
 
 const DEFAULT_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+const HARVESTER_BODY = [WORK, CARRY, CARRY, CARRY, MOVE]
+const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
 // const DEFAULT_BODY = [WORK, CARRY, MOVE] 
 const roleList = [
-	new Role(ROLE_HARVESTER, DEFAULT_BODY, roleHarvester, 1),
+	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 2),
 	new Role(ROLE_UPGRADER, DEFAULT_BODY, roleUpgrader, 1),
-	new Role(ROLE_BUILDER, DEFAULT_BODY, roleBuilder, 3),
+	new Role(ROLE_BUILDER, DEFAULT_BODY, roleBuilder, 1),
+	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
 ]
 
 module.exports.loop = function () {
