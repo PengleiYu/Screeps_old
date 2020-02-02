@@ -11,8 +11,13 @@ const roleRepairer = {
 
         if (creep.memory.repairing) {
             let struct = creep.pos.findClosestByRange(FIND_STRUCTURES, {
-                filter: (it) => it.hits < it.hitsMax
+                filter: (it) => it.structureType == STRUCTURE_RAMPART && it.hits < it.hitsMax
             })
+            if (!struct) {
+                struct = creep.pos.findClosestByRange(FIND_STRUCTURES, {
+                    filter: (it) => it.hits < it.hitsMax
+                })
+            }
             if (struct) {
                 if (creep.repair(struct) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(struct, { visualizePathStyle: { stroke: '#fff' } })

@@ -12,7 +12,7 @@ const ROLE_SOLDIER = 'soldier'
 const ROLE_REPAIRER = 'repairer'
 const ROLE_MINER = 'miner'
 
-const ROLE_WHICH_LOG = ROLE_REPAIRER
+const ROLE_WHICH_LOG = ROLE_UPGRADER
 
 class Role {
 	constructor(role, body, script, max, waitMax = false) {
@@ -47,11 +47,16 @@ class Role {
 	}
 
 	play() {
-		let creepList = _.filter(Game.creeps, (creep) =>
-			creep.memory.role == this.role)
+		let creepList = _.filter(Game.creeps, (creep) => creep.memory.role == this.role)
+
 		this.createIfNeed(creepList)
 		for (let creep of creepList) {
 			this.script.run(creep)
+		}
+	}
+	logDebugRole(msg) {
+		if (this.role == ROLE_WHICH_LOG) {
+			this.log(msg)
 		}
 	}
 	log(msg) {
@@ -64,15 +69,15 @@ const MEDIUM_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
 
 const HARVESTER_BODY = [CARRY, CARRY, MOVE, MOVE]
 const MINER_BODY = [WORK, WORK, WORK, CARRY, MOVE]
-const UPGRADER_BODY = LITTLE_BODY
+const UPGRADER_BODY = MEDIUM_BODY
 const BUILDER_BODY = LITTLE_BODY
 const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
-const REPAIRER_BODY = LITTLE_BODY
+const REPAIRER_BODY = MEDIUM_BODY
 
 const roleList = [
 	new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
 	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),
-	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 1),
+	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 2),
 	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 1),
 	new Role(ROLE_REPAIRER, REPAIRER_BODY, roleRepairer, 1),
 	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
