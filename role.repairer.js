@@ -15,7 +15,7 @@ const roleRepairer = {
             })
             if (struct) {
                 if (creep.repair(struct) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(struct)
+                    creep.moveTo(struct, { visualizePathStyle: { stroke: '#fff' } })
                 }
             }
         } else {

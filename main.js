@@ -3,12 +3,14 @@ const roleHarvester = require('role.harvester')
 const roleBuilder = require('role.builder')
 const roleSoldier = require('role.soldier')
 const roleRepairer = require('role.repairer')
+const roleMiner = require('role.miner')
 
 const ROLE_UPGRADER = 'upgrader'
 const ROLE_HARVESTER = 'harvester'
 const ROLE_BUILDER = 'builder'
 const ROLE_SOLDIER = 'soldier'
 const ROLE_REPAIRER = 'repairer'
+const ROLE_MINER = 'miner'
 
 const ROLE_WHICH_LOG = ROLE_REPAIRER
 
@@ -60,13 +62,15 @@ class Role {
 const LITTLE_BODY = [WORK, CARRY, MOVE]
 const MEDIUM_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
 
-const HARVESTER_BODY = [WORK, WORK, CARRY, MOVE]
+const HARVESTER_BODY = [CARRY, CARRY, MOVE, MOVE]
+const MINER_BODY = [WORK, WORK, WORK, CARRY, MOVE]
 const UPGRADER_BODY = LITTLE_BODY
 const BUILDER_BODY = LITTLE_BODY
 const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
 const REPAIRER_BODY = LITTLE_BODY
 
 const roleList = [
+	new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
 	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),
 	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 1),
 	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 1),
