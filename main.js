@@ -2,11 +2,15 @@ const roleUpgrader = require('role.upgrader')
 const roleHarvester = require('role.harvester')
 const roleBuilder = require('role.builder')
 const roleSoldier = require('role.soldier')
+const roleRepairer = require('role.repairer')
 
 const ROLE_UPGRADER = 'upgrader'
 const ROLE_HARVESTER = 'harvester'
 const ROLE_BUILDER = 'builder'
 const ROLE_SOLDIER = 'soldier'
+const ROLE_REPAIRER = 'repairer'
+
+const ROLE_WHICH_LOG = ROLE_REPAIRER
 
 class Role {
 	constructor(role, body, script, max, waitMax = false) {
@@ -30,37 +34,43 @@ class Role {
 					directions: [BOTTOM]
 				}
 			})
-			// if (code == OK)
-			console.log('spawn a new creep: ' + name + ' ' +
-				code
-				// (code == OK ? 'success' : ('fail, code=' + code))
-			)
+			if (code == OK) {
+				this.log('spawn a new creep: ' + name + 'success')
+			} else {
+				if (this.role == ROLE_WHICH_LOG) {
+					this.log('spawn a new creep: ' + name + ' ' + code)
+				}
+			}
 		}
 	}
 
 	play() {
 		let creepList = _.filter(Game.creeps, (creep) =>
-			// !creep.spawning && 
 			creep.memory.role == this.role)
 		this.createIfNeed(creepList)
-		// if (this.waitMax && creepList.length < this.max) {
-		// 	return
-		// }
 		for (let creep of creepList) {
 			this.script.run(creep)
 		}
 	}
+	log(msg) {
+		console.log('Role ' + this.role + ':' + msg)
+	}
 }
 
 const LITTLE_BODY = [WORK, CARRY, MOVE]
-const DEFAULT_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+const MEDIUM_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+
 const HARVESTER_BODY = [WORK, WORK, CARRY, MOVE]
+const UPGRADER_BODY = LITTLE_BODY
+const BUILDER_BODY = LITTLE_BODY
 const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
-// const DEFAULT_BODY = [WORK, CARRY, MOVE] 
+const REPAIRER_BODY = LITTLE_BODY
+
 const roleList = [
 	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),
-	new Role(ROLE_UPGRADER, LITTLE_BODY, roleUpgrader, 1),
-	new Role(ROLE_BUILDER, LITTLE_BODY, roleBuilder, 1),
+	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 1),
+	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 1),
+	new Role(ROLE_REPAIRER, REPAIRER_BODY, roleRepairer, 1),
 	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
 ]
 

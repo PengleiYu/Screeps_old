@@ -1,11 +1,14 @@
 const spawn = Game.spawns['Spawn1']
 const resourceUtil = {
-    findClosestContainerOfSpawn: (empty) => {
+    findClosestContainerOfSpawn: (hasEmpty) => {
         return spawn.pos.findClosestByRange(FIND_STRUCTURES, {
             filter: (it) => it.structureType == STRUCTURE_CONTAINER
-                && (empty ? it.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                && (hasEmpty ? it.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                     : it.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
         })
+    },
+    findClosestResourceOfSpawn: () => {
+        return spawn.pos.findClosestByRange(FIND_SOURCES)
     },
     withDrawEnergyFromStructure: (creep, structure) => {
         if (structure) {
