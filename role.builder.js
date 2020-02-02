@@ -1,3 +1,5 @@
+const resourceUtil = require('utils.resource')
+
 const roleBuilder = {
     run: function (creep) {
         if (creep.memory.building && creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
@@ -20,9 +22,11 @@ const roleBuilder = {
                 creep.moveTo(Game.spawns['Spawn1'], { visualizePathStyle: { stroke: '#fff' } })
             }
         } else {
-            let resource = creep.room.find(FIND_SOURCES)[0]
-            if (creep.harvest(resource) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(resource, { visualizePathStyle: { stroke: '#fff' } })
+            let container = resourceUtil.findClosestContainerOfSpawn()
+            if (container) {
+                resourceUtil.withDrawEnergyFromStructure(creep, container)
+            } else {
+                resourceUtil.park(creep)
             }
         }
     }

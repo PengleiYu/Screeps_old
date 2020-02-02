@@ -19,6 +19,10 @@ class Role {
 	}
 	createIfNeed(list) {
 		if (list.length < this.max) {
+			if (this.spawn.spawning) {
+				return
+			}
+
 			let name = '' + this.role + Game.time
 			let code = this.spawn.spawnCreep(this.body, name, {
 				memory: {
@@ -26,14 +30,18 @@ class Role {
 					directions: [BOTTOM]
 				}
 			})
-			if (code == OK)
-				console.log('spawn a new creep: ' + name + ' ' +
-					(code == OK ? 'success' : ('fail, code=' + code)))
+			// if (code == OK)
+			console.log('spawn a new creep: ' + name + ' ' +
+				code
+				// (code == OK ? 'success' : ('fail, code=' + code))
+			)
 		}
 	}
 
 	play() {
-		let creepList = _.filter(Game.creeps, (creep) => !creep.spawning && creep.memory.role == this.role)
+		let creepList = _.filter(Game.creeps, (creep) =>
+			// !creep.spawning && 
+			creep.memory.role == this.role)
 		this.createIfNeed(creepList)
 		// if (this.waitMax && creepList.length < this.max) {
 		// 	return
@@ -46,11 +54,11 @@ class Role {
 
 const LITTLE_BODY = [WORK, CARRY, MOVE]
 const DEFAULT_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
-const HARVESTER_BODY = LITTLE_BODY
+const HARVESTER_BODY = [WORK, WORK, CARRY, MOVE]
 const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
 // const DEFAULT_BODY = [WORK, CARRY, MOVE] 
 const roleList = [
-	new Role(ROLE_HARVESTER, LITTLE_BODY, roleHarvester, 1),
+	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),
 	new Role(ROLE_UPGRADER, LITTLE_BODY, roleUpgrader, 1),
 	new Role(ROLE_BUILDER, LITTLE_BODY, roleBuilder, 1),
 	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),

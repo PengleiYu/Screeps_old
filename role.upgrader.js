@@ -1,3 +1,6 @@
+const resourceUtil = require('utils.resource')
+
+
 const roleUpgrader = {
     run: function (creep) {
         if (creep.memory.upgrading && creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
@@ -9,14 +12,16 @@ const roleUpgrader = {
         }
 
         if (creep.memory.upgrading) {
-            const controller = creep.room.controller
+            let controller = creep.room.controller
             if (creep.upgradeController(controller) == ERR_NOT_IN_RANGE) {
                 creep.moveTo(controller, { visualizePathStyle: { stroke: '#fff' } })
             }
         } else {
-            const resource = creep.room.find(FIND_SOURCES)[0]
-            if (creep.harvest(resource) == ERR_NOT_IN_RANGE) {
-                creep.moveTo(resource, { visualizePathStyle: { stroke: '#fff' } })
+            let store = resourceUtil.findClosestContainerOfSpawn()
+            if (store) {
+                resourceUtil.withDrawEnergyFromStructure(creep, store)
+            } else {
+                resourceUtil.park(creep)
             }
         }
     }
