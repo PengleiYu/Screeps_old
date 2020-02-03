@@ -19,14 +19,15 @@ const roleBuilder = {
                 }
             } else {
                 // 停靠在空地
-                creep.moveTo(Game.spawns['Spawn1'], { visualizePathStyle: { stroke: '#fff' } })
+                resourceUtil.park(creep)
             }
         } else {
             let container = resourceUtil.findClosestContainerOfSpawn()
             if (container) {
                 resourceUtil.withDrawEnergyFromStructure(creep, container)
             } else {
-                resourceUtil.park(creep)
+                // resourceUtil.park(creep)
+                resourceUtil.harvestClosestResourceOfSpawn(creep)
             }
         }
     }

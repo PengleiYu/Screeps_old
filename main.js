@@ -25,7 +25,7 @@ class Role {
 	}
 	createIfNeed(list) {
 		if (list.length < this.max) {
-			if (this.spawn.spawning) {
+			if (this.spawn.spawning || !roleCouldSpawn(this)) {
 				return
 			}
 
@@ -75,13 +75,26 @@ const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
 const REPAIRER_BODY = MEDIUM_BODY
 
 const roleList = [
+	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 2),
 	new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
 	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),
-	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 2),
-	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 1),
+	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 3),
 	new Role(ROLE_REPAIRER, REPAIRER_BODY, roleRepairer, 1),
 	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
 ]
+
+// 是否可以spawn该role；用于控制role创建顺序
+function roleCouldSpawn(roleToSpawn) {
+	for (var role of roleList) {
+		if (role.role == roleToSpawn.role) {
+			return true
+		}
+		let roleObject = _.filter(Game.creeps, (creep) => creep.memory.role == role.role)[0]
+		if (!roleObject) {
+			return false
+		}
+	}
+}
 
 module.exports.loop = function () {
 	for (let name in Memory.creeps) {

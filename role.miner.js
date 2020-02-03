@@ -12,9 +12,7 @@ const roleMiner = {
         } else {
             let resource = resourceUtil.findClosestResourceOfSpawn()
             if (resource) {
-                if (creep.harvest(resource) == ERR_NOT_IN_RANGE) {
-                    creep.moveTo(resource, { visualizePathStyle: { stroke: '#fff' } })
-                }
+                resourceUtil.harvestEnergyFromResource(creep, resource)
             }
         }
     }

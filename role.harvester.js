@@ -15,7 +15,9 @@ const roleHarvester = {
             if (container) {
                 resourceUtil.withDrawEnergyFromStructure(creep, container)
             } else {
-                resourceUtil.park(creep)
+                // resourceUtil.park(creep)
+                resourceUtil.harvestEnergyFromResource(creep,
+                    resourceUtil.findClosestResourceOfSpawn())
             }
         } else {
             // 先找container，找不到再找其他有store的建筑
