@@ -5,7 +5,7 @@ const roleUpgrader = {
     run: function (creep) {
         if (creep.memory.upgrading && creep.store.getUsedCapacity(RESOURCE_ENERGY) == 0) {
             creep.memory.upgrading = false
-            creep.say('harvest')
+            creep.say('harvesting')
         } else if (!creep.memory.upgrading && creep.store.getFreeCapacity(RESOURCE_ENERGY) == 0) {
             creep.memory.upgrading = true
             creep.say('upgrading')
@@ -21,7 +21,7 @@ const roleUpgrader = {
             if (store) {
                 resourceUtil.withDrawEnergyFromStructure(creep, store)
             } else {
-                resourceUtil.park(creep)
+                resourceUtil.harvestClosestResourceOfSpawn(creep)
             }
         }
     }

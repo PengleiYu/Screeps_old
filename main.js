@@ -28,7 +28,6 @@ class Role {
 			if (this.spawn.spawning || !roleCouldSpawn(this)) {
 				return
 			}
-
 			let name = '' + this.role + Game.time
 			let code = this.spawn.spawnCreep(this.body, name, {
 				memory: {
@@ -37,10 +36,10 @@ class Role {
 				}
 			})
 			if (code == OK) {
-				this.log('spawn a new creep: ' + name + 'success')
+				this.log('spawn a new creep: ' + name + ' success')
 			} else {
 				if (this.role == ROLE_WHICH_LOG) {
-					this.log('spawn a new creep: ' + name + ' ' + code)
+					this.log('spawn a new creep: ' + name + ' fail, code=' + code)
 				}
 			}
 		}
@@ -69,16 +68,16 @@ const MEDIUM_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
 
 const HARVESTER_BODY = [CARRY, CARRY, MOVE, MOVE]
 const MINER_BODY = [WORK, WORK, WORK, CARRY, MOVE]
-const UPGRADER_BODY = MEDIUM_BODY
+const UPGRADER_BODY = LITTLE_BODY
 const BUILDER_BODY = LITTLE_BODY
 const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
 const REPAIRER_BODY = MEDIUM_BODY
 
 const roleList = [
-	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 2),
+	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 1),
+	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 1),
 	new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
 	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),
-	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 3),
 	new Role(ROLE_REPAIRER, REPAIRER_BODY, roleRepairer, 1),
 	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
 ]
@@ -89,8 +88,8 @@ function roleCouldSpawn(roleToSpawn) {
 		if (role.role == roleToSpawn.role) {
 			return true
 		}
-		let roleObject = _.filter(Game.creeps, (creep) => creep.memory.role == role.role)[0]
-		if (!roleObject) {
+		let roleObject = _.filter(Game.creeps, (creep) => creep.memory.role == role.role)
+		if (!(roleObject && roleObject.length >= role.max)) {
 			return false
 		}
 	}
