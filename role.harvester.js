@@ -9,7 +9,7 @@ const roleHarvester = {
             creep.memory.transfering = true
             creep.say('transfering', { visualizePathStyle: { stroke: '#fff' } })
         }
-
+        // 采集逻辑：有不空的container找container，否则找resource
         if (!creep.memory.transfering) {
             let container = resourceUtil.findClosestContainerOfSpawn()
             if (container) {
@@ -20,12 +20,19 @@ const roleHarvester = {
                     resourceUtil.findClosestResourceOfSpawn())
             }
         } else {
-            // 先找container，找不到再找其他有store的建筑
+            // 运输逻辑：优先store且store不满的我方建筑，没有则停车
             // FIND_MY_STRUCTURES不能找到container
             let structureList = creep.room.find(FIND_MY_STRUCTURES, {
-                filter: (it) => !!it.store
+                filter: (it) => (it.structureType == STRUCTURE_EXTENSION)
                     && it.store.getFreeCapacity(RESOURCE_ENERGY) > 0
             })
+            if (!structureList.length) {
+                structureList = creep.room.find(FIND_MY_STRUCTURES, {
+                    filter: (it) => it.structureType == STRUCTURE_SPAWN
+                        && it.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                })
+            }
+            console.log(structureList)
             if (structureList.length) {
                 let structure = structureList[0]
                 let transferCode = creep.transfer(structure, RESOURCE_ENERGY)

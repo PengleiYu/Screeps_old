@@ -20,32 +20,43 @@ class Role {
 		this.body = body
 		this.script = script
 		this.max = max
-		this.spawn = Game.spawns['Spawn1']
 		this.waitMax = waitMax
+		this.spawnOpts = {
+			memory: {
+				role: this.role,
+			},
+			directions: [BOTTOM],
+			dryRun: false,
+		}
+	}
+	// 不能直接持有Spawn，似乎每个tick全局变量都会重建
+	// 若直接持有全局变量，会导致在新的tick中持有的是旧tick中的变量
+	getSpawn() {
+		return Game.spawns['Spawn1']
 	}
 	createIfNeed(list) {
+		let spawn = this.getSpawn()
+		this.log(`createIfNeed: len=${list.length},max=${this.max}`)
 		if (list.length < this.max) {
-			if (this.spawn.spawning || !roleCouldSpawn(this)) {
+			let couldSpawn = roleCouldSpawn(this)
+			this.log(`not max, couldSpawn=${couldSpawn}`)
+			if (spawn.spawning || !couldSpawn) {
+				this.log(`spawning=${spawn.spawning},couldSpawn=${couldSpawn}`)
 				return
 			}
 			let name = '' + this.role + Game.time
-			let code = this.spawn.spawnCreep(this.body, name, {
-				memory: {
-					role: this.role,
-					directions: [BOTTOM]
-				}
-			})
+			this.spawnOpts.dryRun = true
+			let code = spawn.spawnCreep(this.body, name, this.spawnOpts)
+			this.log(`dryRun spawn a new creep: ${name}, code=${code}`)
 			if (code == OK) {
-				this.log('spawn a new creep: ' + name + ' success')
-			} else {
-				if (this.role == ROLE_WHICH_LOG) {
-					this.log('spawn a new creep: ' + name + ' fail, code=' + code)
-				}
+				this.spawnOpts.dryRun = false
+				spawn.spawnCreep(this.body, name, this.spawnOpts)
 			}
 		}
 	}
 
 	play() {
+		this.log('play')
 		let creepList = _.filter(Game.creeps, (creep) => creep.memory.role == this.role)
 
 		this.createIfNeed(creepList)
@@ -59,14 +70,14 @@ class Role {
 		}
 	}
 	log(msg) {
-		console.log('Role ' + this.role + ':' + msg)
+		console.log(`Role ${this.role}\t: ${msg}`)
 	}
 }
 
 const LITTLE_BODY = [WORK, CARRY, MOVE]
 const MEDIUM_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
 
-const HARVESTER_BODY = [CARRY, CARRY, MOVE, MOVE]
+const HARVESTER_BODY = [CARRY, CARRY, WORK, MOVE, MOVE]
 const MINER_BODY = [WORK, WORK, WORK, CARRY, MOVE]
 const UPGRADER_BODY = LITTLE_BODY
 const BUILDER_BODY = LITTLE_BODY
@@ -76,14 +87,16 @@ const REPAIRER_BODY = MEDIUM_BODY
 const roleList = [
 	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 1),
 	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 1),
-	new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
 	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),
+	new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
 	new Role(ROLE_REPAIRER, REPAIRER_BODY, roleRepairer, 1),
 	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
 ]
 
 // 是否可以spawn该role；用于控制role创建顺序
 function roleCouldSpawn(roleToSpawn) {
+	// let roles = roleList.map((it) => it.role)
+	// console.log(`roleList: ${roles}`)
 	for (var role of roleList) {
 		if (role.role == roleToSpawn.role) {
 			return true
@@ -103,6 +116,7 @@ module.exports.loop = function () {
 		}
 	}
 
+	console.log('loop')
 	for (let role of roleList) {
 		role.play()
 	}

@@ -9,6 +9,7 @@ const roleRepairer = {
             creep.say('repairing')
         }
 
+        // 修理逻辑：优先找损坏的大门，其次损坏的其他建筑
         if (creep.memory.repairing) {
             let struct = creep.pos.findClosestByRange(FIND_STRUCTURES, {
                 filter: (it) => it.structureType == STRUCTURE_RAMPART && it.hits < it.hitsMax
@@ -22,8 +23,11 @@ const roleRepairer = {
                 if (creep.repair(struct) == ERR_NOT_IN_RANGE) {
                     creep.moveTo(struct, { visualizePathStyle: { stroke: '#fff' } })
                 }
+            } else {
+                RESOURCE_UTIL.park(creep)
             }
         } else {
+            // 获取能量逻辑：优先最近的container，没有则停车
             let container = RESOURCE_UTIL.findClosestContainerOfSpawn()
             if (container) {
                 RESOURCE_UTIL.withDrawEnergyFromStructure(creep, container)
