@@ -28,8 +28,10 @@ const roleHarvester = {
             })
             if (!structureList.length) {
                 structureList = creep.room.find(FIND_MY_STRUCTURES, {
-                    filter: (it) => it.structureType == STRUCTURE_SPAWN
-                        && it.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                    filter: (it) => 
+                    // it.structureType == STRUCTURE_SPAWN
+                        // && 
+                     it.store && it.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                 })
             }
             console.log(structureList)

@@ -25,7 +25,7 @@ class Role {
 			memory: {
 				role: this.role,
 			},
-			directions: [BOTTOM],
+// 			directions: [BOTTOM],
 			dryRun: false,
 		}
 	}
@@ -45,7 +45,7 @@ class Role {
 				return
 			}
 			let name = '' + this.role + Game.time
-			this.spawnOpts.dryRun = true
+			this.spawnOpts.dryRun = true//todo dryRun不检查container中的能量
 			let code = spawn.spawnCreep(this.body, name, this.spawnOpts)
 			this.log(`dryRun spawn a new creep: ${name}, code=${code}`)
 			if (code == OK) {
@@ -78,17 +78,17 @@ const LITTLE_BODY = [WORK, CARRY, MOVE]
 const MEDIUM_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
 
 const HARVESTER_BODY = [CARRY, CARRY, WORK, MOVE, MOVE]
-const MINER_BODY = [WORK, WORK, WORK, CARRY, MOVE]
+const MINER_BODY = [WORK, WORK, WORK,WORK, CARRY, MOVE]
 const UPGRADER_BODY = LITTLE_BODY
 const BUILDER_BODY = LITTLE_BODY
 const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
 const REPAIRER_BODY = MEDIUM_BODY
 
 const roleList = [
+    new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),    	
+    new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
 	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 1),
 	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 1),
-	new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),
-	new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
 	new Role(ROLE_REPAIRER, REPAIRER_BODY, roleRepairer, 1),
 	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
 ]

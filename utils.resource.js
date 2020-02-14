@@ -7,7 +7,16 @@ const findClosestResourceOfSpawn = () => {
 // 寻找离spawn最近的container
 const findClosestContainerOfSpawn = (hasEmpty) => {
     return getSpawn().pos.findClosestByRange(FIND_STRUCTURES, {
-        filter: (it) => it.structureType == STRUCTURE_CONTAINER
+        filter: (it) => (it.structureType == STRUCTURE_CONTAINER
+        ||it.structureType ==  STRUCTURE_STORAGE)
+            && (hasEmpty ? it.store.getFreeCapacity(RESOURCE_ENERGY) > 0
+                : it.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
+    })
+}
+const findClosestContainerOfScreep = (screep,hasEmpty) => {
+    return screep.pos.findClosestByRange(FIND_STRUCTURES, {
+        filter: (it) => (it.structureType == STRUCTURE_CONTAINER
+        ||it.structureType ==  STRUCTURE_STORAGE)
             && (hasEmpty ? it.store.getFreeCapacity(RESOURCE_ENERGY) > 0
                 : it.store.getUsedCapacity(RESOURCE_ENERGY) > 0)
     })
@@ -43,6 +52,7 @@ const park = (creep) => {
 module.exports = {
     findClosestContainerOfSpawn: findClosestContainerOfSpawn,
     findClosestResourceOfSpawn: findClosestResourceOfSpawn,
+    findClosestContainerOfScreep: findClosestContainerOfScreep,
     withDrawEnergyFromStructure: withDrawEnergyFromStructure,
     harvestEnergyFromResource: harvestEnergyFromResource,
     harvestClosestResourceOfSpawn: harvestClosestResourceOfSpawn,
