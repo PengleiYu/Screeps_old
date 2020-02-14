@@ -21,7 +21,7 @@ const roleBuilder = {
                 resourceUtil.park(creep)
             }
         } else {
-            let container = resourceUtil.findClosestContainerOfSpawn()
+            let container = resourceUtil.findClosestUsedContainerOfSpawn(STRUCTURE_STORAGE)
             if (container) {
                 resourceUtil.withDrawEnergyFromStructure(creep, container)
             } else {

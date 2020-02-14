@@ -4,6 +4,7 @@ const roleBuilder = require('role.builder')
 const roleSoldier = require('role.soldier')
 const roleRepairer = require('role.repairer')
 const roleMiner = require('role.miner')
+const roleTranfer = require('role.transfer')
 
 const ROLE_UPGRADER = 'upgrader'
 const ROLE_HARVESTER = 'harvester'
@@ -11,6 +12,7 @@ const ROLE_BUILDER = 'builder'
 const ROLE_SOLDIER = 'soldier'
 const ROLE_REPAIRER = 'repairer'
 const ROLE_MINER = 'miner'
+const ROLE_TRANSFER='transfer'
 
 const ROLE_WHICH_LOG = ROLE_UPGRADER
 
@@ -87,6 +89,7 @@ const REPAIRER_BODY = MEDIUM_BODY
 const roleList = [
     new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),    	
     new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
+    new Role(ROLE_TRANSFER, HARVESTER_BODY, roleTranfer, 1),    	
 	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 1),
 	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 1),
 	new Role(ROLE_REPAIRER, REPAIRER_BODY, roleRepairer, 1),

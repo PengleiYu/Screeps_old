@@ -28,7 +28,7 @@ const roleRepairer = {
             }
         } else {
             // 获取能量逻辑：优先最近的container，没有则停车
-            let container = RESOURCE_UTIL.findClosestContainerOfSpawn()
+            let container = RESOURCE_UTIL.findClosestUsedContainerOfSpawn(STRUCTURE_STORAGE)
             if (container) {
                 RESOURCE_UTIL.withDrawEnergyFromStructure(creep, container)
             } else {

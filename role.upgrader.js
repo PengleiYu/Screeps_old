@@ -17,7 +17,7 @@ const roleUpgrader = {
                 creep.moveTo(controller, { visualizePathStyle: { stroke: '#fff' } })
             }
         } else {
-            let store = resourceUtil.findClosestContainerOfSpawn()
+            let store = resourceUtil.findClosestUsedContainerOfSpawn(STRUCTURE_STORAGE)
             if (store) {
                 resourceUtil.withDrawEnergyFromStructure(creep, store)
             } else {
