@@ -12,7 +12,7 @@ const ROLE_BUILDER = 'builder'
 const ROLE_SOLDIER = 'soldier'
 const ROLE_REPAIRER = 'repairer'
 const ROLE_MINER = 'miner'
-const ROLE_TRANSFER='transfer'
+const ROLE_TRANSFER = 'transfer'
 
 const ROLE_WHICH_LOG = ROLE_UPGRADER
 
@@ -27,7 +27,7 @@ class Role {
 			memory: {
 				role: this.role,
 			},
-// 			directions: [BOTTOM],
+			// 			directions: [BOTTOM],
 			dryRun: false,
 		}
 	}
@@ -78,33 +78,32 @@ class Role {
 
 const LITTLE_BODY = [WORK, CARRY, MOVE]
 const MEDIUM_BODY = [WORK, WORK, CARRY, CARRY, MOVE, MOVE]
+const LARGE_BODY = [WORK, WORK, WORK, CARRY, CARRY, CARRY, MOVE, MOVE]
 
-const HARVESTER_BODY = [CARRY, CARRY, WORK, MOVE, MOVE]
-const MINER_BODY = [WORK, WORK, WORK,WORK, CARRY, MOVE]
-const UPGRADER_BODY = LITTLE_BODY
+const TRANSFER_BODY = [CARRY, CARRY, CARRY, MOVE, MOVE, MOVE]
+const MINER_BODY = [WORK, WORK, WORK, WORK, WORK, CARRY, MOVE]//5个正好挖完一个矿
+const UPGRADER_BODY = LARGE_BODY
 const BUILDER_BODY = LITTLE_BODY
 const SOLDIER_BODY = [MOVE, MOVE, TOUGH, TOUGH, TOUGH, ATTACK]
 const REPAIRER_BODY = MEDIUM_BODY
 
 const roleList = [
-    new Role(ROLE_HARVESTER, HARVESTER_BODY, roleHarvester, 1),    	
-    new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
-    new Role(ROLE_TRANSFER, HARVESTER_BODY, roleTranfer, 1),    	
+	new Role(ROLE_HARVESTER, LITTLE_BODY, roleHarvester, 1),
+	new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
+	new Role(ROLE_MINER, MINER_BODY, roleMiner, 1),
+	new Role(ROLE_TRANSFER, TRANSFER_BODY, roleTranfer, 1),
 	new Role(ROLE_BUILDER, BUILDER_BODY, roleBuilder, 1),
-	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 1),
+	new Role(ROLE_UPGRADER, UPGRADER_BODY, roleUpgrader, 2),
 	new Role(ROLE_REPAIRER, REPAIRER_BODY, roleRepairer, 1),
-	// new Role(ROLE_SOLDIER, SOLDIER_BODY, roleSoldier, 3, true),
 ]
 
 // 是否可以spawn该role；用于控制role创建顺序
 function roleCouldSpawn(roleToSpawn) {
-	// let roles = roleList.map((it) => it.role)
-	// console.log(`roleList: ${roles}`)
 	for (var role of roleList) {
 		if (role.role == roleToSpawn.role) {
 			return true
 		}
-		let roleObject = _.filter(Game.creeps, (creep) => creep.memory.role == role.role)
+		let roleObject = _.filter(Game.creeps, (creep) => creep.memory.role == role.role && !creep.spawning)
 		if (!(roleObject && roleObject.length >= role.max)) {
 			return false
 		}

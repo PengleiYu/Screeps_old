@@ -9,13 +9,13 @@ const roleTransfer = {
             creep.memory.transfering = true
             creep.say('transfering', { visualizePathStyle: { stroke: '#fff' } })
         }
-        // 采集逻辑：有不空的container找container，否则找resource
+        //采集优先级：散落资源>container
         if (!creep.memory.transfering) {
             let container = resourceUtil.findClosestUsedContainerOfSpawn(STRUCTURE_CONTAINER)
             if (container) {
                 resourceUtil.withDrawEnergyFromStructure(creep, container)
             } else {
-                resourceUtil.park(creep)
+                // resourceUtil.park(creep)
             }
         } else {
             // 运输逻辑：优先storage，没有则停车
@@ -30,7 +30,7 @@ const roleTransfer = {
                     creep.moveTo(structure, { visualizePathStyle: { stroke: '#fff' } })
                 }
             } else {
-                resourceUtil.park(creep)
+                // resourceUtil.park(creep)
             }
         }
     }
